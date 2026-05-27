@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Cairo:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5EFE6;--bg2:#EDE3D5;--bg3:#D9CBBA;
+  --burg:#6B1A2B;--burg-lt:#9B3A4C;
+  --brn:#5C3317;--brn-lt:#9C6B43;
+  --gold:#C9A844;--gold-lt:#E8D498;--gold-pale:#F7F0D8;
+  --txt:#2D1A10;--txt-lt:#8A6A58;--cream:#FBF8F2;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Cairo',sans-serif;color:var(--txt);min-height:100vh;overflow-x:hidden;-webkit-text-size-adjust:100%;}
+.top-stripe{height:4px;background:linear-gradient(90deg,var(--bg),var(--burg),var(--gold),var(--brn),var(--bg));position:fixed;top:0;left:0;width:100%;z-index:50;display:none;}
+
+/* PASSWORD SCREEN */
+#pwd-screen{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;}
+.pwd-cinder{width:min(145px,36vw);margin-bottom:1rem;filter:drop-shadow(0 4px 14px rgba(107,26,43,.14));cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.pwd-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,7vw,2.8rem);font-style:italic;color:var(--burg);margin-bottom:.2rem;letter-spacing:.04em;}
+.pwd-sub{font-size:12px;color:var(--txt-lt);letter-spacing:.14em;font-weight:300;margin-bottom:1.8rem;}
+.pwd-box{background:var(--cream);border:1px solid var(--gold-lt);border-radius:22px;padding:1.8rem 2rem;width:100%;max-width:360px;text-align:center;box-shadow:0 6px 40px rgba(107,26,43,.08);}
+.pwd-lbl{font-size:11px;color:var(--txt-lt);letter-spacing:.12em;margin-bottom:10px;font-weight:300;}
+#pwd-input{width:100%;padding:14px 16px;border:1.5px solid var(--gold-lt);border-radius:14px;background:var(--bg);font-family:'Cairo',sans-serif;font-size:18px;text-align:center;color:var(--txt);outline:none;transition:border-color .2s;margin-bottom:14px;letter-spacing:.08em;-webkit-appearance:none;}
+#pwd-input:focus{border-color:var(--burg);}
+.pwd-btn{width:100%;padding:14px;background:var(--burg);color:#fff;border:none;border-radius:14px;font-family:'Cairo',sans-serif;font-size:16px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background .2s;}
+.pwd-btn:hover{background:var(--burg-lt);}
+.pwd-btn:active{transform:scale(.97);}
+#pwd-err{font-size:12px;color:var(--burg-lt);margin-top:10px;display:none;}
+#pwd-screen.fade-out{animation:fadeOut .8s ease forwards;pointer-events:none;}
+@keyframes fadeOut{to{opacity:0;}}
+
+/* MAIN PAGE */
+#main-page{display:none;max-width:680px;margin:0 auto;padding:4px 16px 80px;}
+.pg-header{text-align:center;padding:clamp(2rem,6vw,3.5rem) 0 2rem;}
+.orn-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:.8rem;}
+.orn-line{height:1px;width:min(60px,12vw);background:linear-gradient(to right,transparent,var(--gold));}
+.orn-line.r{background:linear-gradient(to left,transparent,var(--gold));}
+.orn-dia{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;}
+.pg-eyebrow{font-size:10px;letter-spacing:.2em;color:var(--txt-lt);font-weight:300;margin-bottom:.6rem;}
+.pg-main-title{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,6vw,2.4rem);font-style:italic;color:var(--burg);letter-spacing:.03em;}
+
+/* Message card */
+.msg-wrap{margin-bottom:2.5rem;}
+.msg-card{background:var(--cream);border:1px solid var(--gold-lt);border-radius:22px;padding:2rem 1.5rem 1.8rem;position:relative;overflow:hidden;}
+.msg-card::before{content:'\201C';font-family:'Playfair Display',serif;font-size:110px;color:var(--gold-lt);position:absolute;top:-18px;right:6px;line-height:1;opacity:.55;pointer-events:none;}
+.msg-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),var(--burg),var(--gold),transparent);border-radius:0 0 22px 22px;}
+.msg-body{position:relative;z-index:1;}
+.msg-line{font-size:clamp(13px,3.5vw,15px);line-height:2.1;color:var(--txt);margin-bottom:.45em;}
+.msg-line.ind{padding-right:1em;color:var(--txt-lt);}
+.msg-line.hi{color:var(--burg);font-weight:600;}
+.msg-sig{text-align:left;margin-top:1.3rem;font-size:12px;color:var(--brn-lt);font-style:italic;}
+
+/* Photos */
+.photos-sec{display:flex;flex-direction:column;gap:0;}
+.photo-wrap{opacity:0;transform:translateY(65px);transition:opacity .85s cubic-bezier(.22,.68,0,1.2),transform .85s cubic-bezier(.22,.68,0,1.2);}
+.photo-wrap.visible{opacity:1;transform:translateY(0);}
+.photo-card{border-radius:20px;overflow:hidden;border:1px solid var(--gold-lt);position:relative;aspect-ratio:4/3;background:var(--bg2);width:100%;}
+.photo-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-num{position:absolute;bottom:12px;right:14px;background:rgba(107,26,43,.7);color:#fff;font-size:11px;padding:3px 12px;border-radius:20px;letter-spacing:.08em;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+
+/* Cinderella divider */
+.cd-wrap{display:flex;flex-direction:column;align-items:center;padding:1.2rem 0;}
+.cd-vline{width:1px;height:32px;background:linear-gradient(to bottom,var(--gold-lt),transparent);}
+.cd-vline.bot{background:linear-gradient(to bottom,transparent,var(--gold-lt));}
+.cd-figure{position:relative;width:min(150px,40vw);height:min(185px,50vw);}
+.cd-figure svg{width:100%;height:100%;}
+.cd-magic{font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:var(--gold);letter-spacing:.12em;margin-top:2px;}
+.sp{position:absolute;border-radius:50%;background:var(--gold);animation:sp-idle 2.5s ease-in-out infinite;}
+@keyframes sp-idle{0%,100%{opacity:0;transform:scale(0) translateY(0);}50%{opacity:.75;transform:scale(1) translateY(-7px);}}
+.wand-g{transform-origin:68px 120px;}
+@keyframes wand-wave{0%{transform:rotate(0);}18%{transform:rotate(-20deg);}38%{transform:rotate(14deg);}58%{transform:rotate(-10deg);}78%{transform:rotate(6deg);}100%{transform:rotate(0);}}
+
+/* Cinderella button */
+.cd-wrap.clickable{cursor:pointer;}
+.cd-wrap.clickable .cd-figure{animation:cinder-float 2.4s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(201,168,68,.45));transition:filter .25s,transform .2s;}
+.cd-wrap.clickable:hover .cd-figure{animation:none;filter:drop-shadow(0 0 22px rgba(201,168,68,.85));transform:scale(1.07) translateY(-4px);}
+.cd-wrap.clickable:active .cd-figure{transform:scale(.93);}
+@keyframes cinder-float{0%,100%{transform:translateY(0);}40%{transform:translateY(-10px) rotate(-1.5deg);}70%{transform:translateY(-5px) rotate(1deg);}}
+.cd-hint{font-size:11px;color:var(--gold);letter-spacing:.18em;margin-top:4px;animation:hint-blink 2s ease-in-out infinite;}
+@keyframes hint-blink{0%,100%{opacity:.5;}50%{opacity:1;}}
+.cd-wrap.cd-used{cursor:default;opacity:.55;}
+.cd-wrap.cd-used .cd-figure{animation:none !important;filter:none !important;}
+@keyframes cinderAppear{0%{opacity:0;transform:scale(.4) translateY(30px);}70%{transform:scale(1.06) translateY(-4px);}100%{opacity:1;transform:scale(1) translateY(0);}}
+.cd-wrap.cd-appear{animation:cinderAppear .75s cubic-bezier(.22,.68,0,1.3) forwards;}
+
+/* Magic photo reveal */
+@keyframes magicAppear{0%{opacity:0;transform:scale(.25) rotate(-10deg);filter:brightness(3) saturate(0);}35%{opacity:1;filter:brightness(1.4) saturate(1.3);}65%{transform:scale(1.05) rotate(.8deg);}100%{opacity:1;transform:scale(1) rotate(0);filter:brightness(1) saturate(1);}}
+.photo-wrap.magic-reveal{opacity:1!important;transform:none!important;animation:magicAppear 1.1s cubic-bezier(.22,.68,0,1.3) forwards;}
+
+/* Sparkles */
+.spark-dot{position:fixed;border-radius:50%;pointer-events:none;z-index:999;animation:spark-fly var(--d,.8s) ease forwards;}
+@keyframes spark-fly{0%{opacity:1;transform:translate(0,0) scale(1);}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0);}}
+
+/* Special button */
+.special-sec{text-align:center;padding:3rem 0 1.5rem;}
+.special-btn{display:inline-flex;align-items:center;gap:10px;padding:16px clamp(28px,8vw,44px);background:var(--burg);color:#fff;border:none;border-radius:50px;font-family:'Cairo',sans-serif;font-size:clamp(14px,4vw,16px);font-weight:600;cursor:pointer;letter-spacing:.04em;box-shadow:0 6px 24px rgba(107,26,43,.28);-webkit-tap-highlight-color:transparent;touch-action:manipulation;opacity:0;transform:scale(.92);transition:opacity .7s ease,transform .7s ease,background .2s;}
+.special-btn.visible{opacity:1;transform:scale(1);}
+.special-btn:hover{background:var(--burg-lt);}
+.special-btn:active{transform:scale(.97);}
+.pg-footer{text-align:center;padding:1rem 0 2rem;color:var(--gold);font-size:14px;letter-spacing:10px;}
+
+/* Overlays */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(28,20,16,.55);display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.overlay.open{display:flex;animation:mdIn .35s ease;}
+@keyframes mdIn{from{opacity:0;}to{opacity:1;}}
+.modal-box{background:var(--cream);border-radius:26px;padding:2rem 1.5rem;width:100%;max-width:420px;text-align:center;border:1px solid var(--gold-lt);position:relative;animation:mdSlide .35s ease;max-height:90vh;overflow-y:auto;}
+@keyframes mdSlide{from{transform:translateY(22px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-close{position:absolute;top:14px;left:16px;background:none;border:none;color:var(--txt-lt);cursor:pointer;font-size:22px;padding:6px;opacity:.55;-webkit-tap-highlight-color:transparent;}
+.modal-close:hover{opacity:1;}
+.spl-lock{font-size:38px;margin-bottom:.8rem;display:block;}
+.spl-pwd-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--burg);margin-bottom:1.2rem;}
+#spl-pwd-input{width:100%;padding:13px 16px;border:1.5px solid var(--gold-lt);border-radius:14px;background:var(--bg);font-family:'Cairo',sans-serif;font-size:16px;text-align:center;color:var(--txt);outline:none;transition:border-color .2s;margin-bottom:12px;-webkit-appearance:none;}
+#spl-pwd-input:focus{border-color:var(--burg);}
+.spl-pwd-btn{width:100%;padding:13px;background:var(--burg);color:#fff;border:none;border-radius:14px;font-family:'Cairo',sans-serif;font-size:15px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.spl-pwd-btn:active{transform:scale(.97);}
+#spl-pwd-err{font-size:12px;color:var(--burg-lt);margin-top:8px;display:none;}
+.spl-heart{font-size:44px;margin-bottom:.8rem;display:block;animation:hb 1.6s ease-in-out infinite;}
+@keyframes hb{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+.spl-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-style:italic;color:var(--burg);margin-bottom:1.3rem;}
+.spl-msg{font-size:clamp(13px,3.5vw,14.5px);line-height:2.1;color:var(--txt);font-weight:300;}
+.spl-foot{margin-top:1.4rem;font-size:12px;color:var(--gold);font-family:'Playfair Display',serif;font-style:italic;letter-spacing:.1em;}
+
+/* Countdown */
+#thanos-countdown{display:none;flex-direction:column;align-items:center;margin-bottom:1.2rem;}
+#thanos-countdown.visible{display:flex;}
+.countdown-label{font-size:10px;letter-spacing:.18em;color:var(--txt-lt);font-weight:300;margin-bottom:4px;}
+#countdown-num{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,10vw,4rem);color:var(--burg);font-style:italic;line-height:1;}
+#countdown-num.urgent{color:#c0392b;animation:urgentPulse .5s ease-in-out infinite;}
+@keyframes urgentPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+.countdown-bar-wrap{width:100%;max-width:260px;height:3px;background:var(--gold-lt);border-radius:4px;margin-top:6px;overflow:hidden;}
+#countdown-bar{height:100%;width:100%;background:linear-gradient(90deg,var(--burg),var(--gold));border-radius:4px;transition:width 1s linear,background .4s;}
+#countdown-bar.urgent{background:linear-gradient(90deg,#c0392b,#e74c3c);}
+
+/* Thanos canvas */
+#thanos-canvas{position:fixed;inset:0;z-index:500;pointer-events:none;display:none;}
+
+/* Eid buttons */
+.eid-btn{margin-top:1.8rem;display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--burg);color:#fff;border:none;border-radius:50px;font-family:'Cairo',sans-serif;font-size:clamp(15px,4vw,17px);font-weight:700;cursor:pointer;letter-spacing:.04em;box-shadow:0 6px 28px rgba(107,26,43,.3);-webkit-tap-highlight-color:transparent;touch-action:manipulation;animation:eid-pulse 2s ease-in-out infinite;transition:transform .15s,background .2s;}
+.eid-btn:hover{background:var(--burg-lt);transform:scale(1.04);}
+.eid-btn:active{transform:scale(.96);}
+.eid-btn-gold{background:linear-gradient(135deg,#C9A844,#E8B830);color:#2D1A10;box-shadow:0 6px 28px rgba(201,168,68,.4);}
+.eid-btn-gold:hover{background:linear-gradient(135deg,#E8B830,#F5D76E);transform:scale(1.04);}
+@keyframes eid-pulse{0%,100%{box-shadow:0 6px 28px rgba(107,26,43,.3);}50%{box-shadow:0 8px 36px rgba(107,26,43,.5),0 0 0 6px rgba(201,168,68,.15);}}
+.eid-msg p{text-align:center;}
+@keyframes stepFadeIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+#after-step-2,#after-step-3{animation:stepFadeIn .8s ease forwards;}
+
+/* After page */
+#after-overlay{position:fixed;inset:0;z-index:600;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;opacity:0;transition:opacity 1.2s ease;-webkit-user-select:none;user-select:none;}
+#after-overlay.open{display:flex;}
+#after-overlay.visible{opacity:1;}
+.after-sparkle{font-size:48px;margin-bottom:1rem;animation:hb 2s ease-in-out infinite;}
+.after-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,6vw,2.2rem);font-style:italic;color:var(--burg);margin-bottom:1rem;}
+.after-msg{font-size:clamp(13px,3.5vw,15px);line-height:2.2;color:var(--txt);font-weight:300;max-width:380px;}
+.after-foot{margin-top:2rem;font-size:12px;color:var(--gold);font-family:'Playfair Display',serif;font-style:italic;letter-spacing:.12em;}
+#after-content{position:relative;isolation:isolate;}
+#after-content::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.004);mix-blend-mode:difference;pointer-events:none;z-index:1;}
+.no-ss-shield{position:fixed;inset:0;z-index:601;pointer-events:none;}
+@media print{body{display:none!important;}}
+
+/* Setup */
+#setup-modal{position:fixed;inset:0;z-index:300;background:rgba(28,20,16,.65);display:none;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;backdrop-filter:blur(4px);}
+#setup-modal.open{display:flex;}
+.setup-box{background:var(--cream);border-radius:22px;padding:1.8rem 1.5rem;width:100%;max-width:480px;border:1px solid var(--gold-lt);margin:auto;}
+.setup-h{font-family:'Playfair Display',serif;font-size:1.4rem;font-style:italic;color:var(--burg);margin-bottom:.8rem;}
+.setup-note{font-size:12px;color:var(--txt-lt);line-height:1.9;margin-bottom:1.3rem;background:var(--gold-pale);padding:10px 14px;border-radius:10px;border-right:3px solid var(--gold);}
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.3rem;}
+.setup-slot{aspect-ratio:1;border:1.5px dashed var(--gold-lt);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;background:var(--bg);gap:8px;}
+.setup-slot img{width:100%;height:100%;object-fit:cover;}
+.setup-slot span{font-size:12px;color:var(--txt-lt);}
+.btn-export{width:100%;padding:13px;background:var(--brn);color:#fff;border:none;border-radius:12px;font-family:'Cairo',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px;}
+.btn-cancel{width:100%;padding:11px;background:transparent;color:var(--txt-lt);border:1px solid var(--bg3);border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer;}
+.fi{display:none;}
+</style>
+</head>
+<body>
+
+<div class="top-stripe" id="top-stripe"></div>
+
+<!-- PASSWORD SCREEN -->
+<div id="pwd-screen">
+  <svg id="pwd-cinder" class="pwd-cinder" viewBox="0 0 240 250" xmlns="http://www.w3.org/2000/svg">
+    <path d="M120 110 C83 128 50 165 46 208 Q82 228 120 228 Q158 228 194 208 C190 165 157 128 120 110Z" fill="#C5D9F0"/>
+    <path d="M120 110 C102 130 90 164 88 208 Q101 224 120 228 Q139 224 152 208 C150 164 138 130 120 110Z" fill="#B0CAE8"/>
+    <ellipse cx="100" cy="222" rx="14" ry="6" fill="#D4EAF7" opacity=".8"/>
+    <ellipse cx="140" cy="222" rx="14" ry="6" fill="#D4EAF7" opacity=".8"/>
+    <path d="M96 76 L144 76 L150 114 Q120 126 90 114Z" fill="#5B8FBF"/>
+    <path d="M96 76 Q120 68 144 76 Q140 87 120 90 Q100 87 96 76Z" fill="#E8F4FB"/>
+    <path d="M91 103 Q120 114 149 103 L149 112 Q120 122 91 112Z" fill="#4A7A9B"/>
+    <path d="M95 86 Q74 104 68 122" stroke="#F5C5A3" stroke-width="13" stroke-linecap="round" fill="none"/>
+    <circle cx="66" cy="127" r="11" fill="#E8F0F8"/>
+    <path d="M145 86 Q164 98 170 112" stroke="#F5C5A3" stroke-width="13" stroke-linecap="round" fill="none"/>
+    <circle cx="172" cy="117" r="11" fill="#E8F0F8"/>
+    <circle cx="120" cy="52" r="28" fill="#F5C5A3"/>
+    <ellipse cx="120" cy="33" rx="25" ry="21" fill="#E8B830"/>
+    <circle cx="120" cy="23" r="15" fill="#F0C840"/>
+    <ellipse cx="93" cy="47" rx="10" ry="17" fill="#E8B830"/>
+    <ellipse cx="147" cy="47" rx="10" ry="17" fill="#E8B830"/>
+    <path d="M105 28 L109 18 L114 25 L120 13 L126 25 L131 18 L135 28" stroke="#C9A844" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+    <circle cx="120" cy="14" r="5" fill="#F5D76E"/>
+    <circle cx="109" cy="19" r="3.5" fill="#F5D76E"/>
+    <circle cx="131" cy="19" r="3.5" fill="#F5D76E"/>
+    <ellipse cx="107" cy="55" rx="5" ry="5.5" fill="#3D2510"/>
+    <ellipse cx="133" cy="55" rx="5" ry="5.5" fill="#3D2510"/>
+    <circle cx="108.5" cy="53" r="2.2" fill="white"/>
+    <circle cx="134.5" cy="53" r="2.2" fill="white"/>
+    <ellipse cx="96" cy="61" rx="8" ry="5" fill="#F4A6A6" opacity=".4"/>
+    <ellipse cx="144" cy="61" rx="8" ry="5" fill="#F4A6A6" opacity=".4"/>
+    <path d="M117 64 Q120 68 123 64" stroke="#D4956A" stroke-width="1.5" fill="none"/>
+    <path d="M109 70 Q120 79 131 70" stroke="#C4606A" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M112 71 Q120 77 128 71 Q120 75 112 71Z" fill="#E88080" opacity=".6"/>
+    <g class="wand-g" id="main-wand">
+      <line x1="66" y1="122" x2="44" y2="148" stroke="#C9A844" stroke-width="3" stroke-linecap="round"/>
+      <path d="M44 140 L45.5 146 L51 146 L46.5 150 L48 156 L44 153 L40 156 L41.5 150 L37 146 L42.5 146Z" fill="#F5D76E" stroke="#C9A844" stroke-width=".8"/>
+      <circle cx="34" cy="133" r="3.5" fill="#F5D76E" opacity=".7"/>
+      <circle cx="57" cy="157" r="2.5" fill="#F5D76E" opacity=".55"/>
+      <circle cx="28" cy="150" r="2" fill="#F5D76E" opacity=".65"/>
+    </g>
+  </svg>
+  <h1 class="pwd-title">سندرلا</h1>
+  <p class="pwd-sub">✦ &nbsp; كلمة السر &nbsp; ✦</p>
+  <div class="pwd-box">
+    <p class="pwd-lbl">أدخل الباسورد</p>
+    <input type="text" id="pwd-input" placeholder="✦ ✦ ✦ ✦" autocomplete="off">
+    <button class="pwd-btn" onclick="checkPwd()">دخول ✨</button>
+    <p id="pwd-err">باسورد غلط، حاول تاني 💕</p>
+  </div>
+</div>
+
+<!-- SPECIAL MESSAGE MODAL -->
+<div class="overlay" id="spl-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeSpl()">✕</button>
+    <div id="spl-pwd-step">
+      <span class="spl-lock">🔐</span>
+      <h2 class="spl-pwd-title">الرسالة الخاصة</h2>
+      <p style="font-size:12px;color:var(--txt-lt);margin-bottom:1rem;">ادخلي الباسورد</p>
+      <input type="text" id="spl-pwd-input" placeholder="✦ ✦ ✦ ✦" autocomplete="off">
+      <button class="spl-pwd-btn" onclick="checkSplPwd()">فتح 🔓</button>
+      <p id="spl-pwd-err">باسورد غلط 💕</p>
+    </div>
+    <div id="spl-msg-step" style="display:none;">
+      <div id="thanos-countdown">
+        <span class="countdown-label">✦ الرسالة ستختفي للأبد خلال ✦</span>
+        <span id="countdown-num">60</span>
+        <div class="countdown-bar-wrap"><div id="countdown-bar"></div></div>
+      </div>
+      <span class="spl-heart">🤍</span>
+      <h2 class="spl-title">رسالة خاصة</h2>
+      <div class="spl-msg">
+        <!-- ✏️ عدّل الرسالة الخاصة هنا -->
+        <p>
+          أنتِ أجمل مفاجأة ما توقعتهاش،<br>
+          وكل يوم بيعدي معاكِ بيثبتلي<br>
+          إن في حاجات في الدنيا<br>
+          تستاهل أكتر من أي كلام.<br><br>
+          مجرد إنك موجودة في حياتي،<br>
+          ده نعمة مش هقدر أشكر عليها بما يكفي.
+        </p>
+      </div>
+      <div class="spl-foot">✦ &nbsp; دايماً وللأبد &nbsp; ✦</div>
+    </div>
+  </div>
+</div>
+
+<!-- THANOS CANVAS -->
+<canvas id="thanos-canvas"></canvas>
+
+<!-- AFTER PAGE -->
+<div id="after-overlay">
+  <div class="no-ss-shield"></div>
+  <div id="after-content">
+
+    <!-- المرحلة الأولى: زرار كل سنة وانت طيبة -->
+    <div id="after-step-1">
+      <div class="after-sparkle">🌙</div>
+      <h2 class="after-title">عيد مبارك 🤍</h2>
+      <div class="after-msg">
+        <p>الرسالة اتحرقت وراحت للأبد،<br>بس في حاجة تانية لسه مستنياكِ...</p>
+      </div>
+      <button class="eid-btn" id="eid-greet-btn" onclick="handleEidGreet()">
+        🌸 كل سنة وانتِ طيبة 🌸
+      </button>
+    </div>
+
+    <!-- المرحلة التانية: الرسالة الأعمق -->
+    <div id="after-step-2" style="display:none;">
+      <div class="after-sparkle">💛</div>
+      <h2 class="after-title">من القلب...</h2>
+      <div class="after-msg eid-msg">
+        <p>
+          كل سنة وانتِ أحلى حاجة في حياتي،<br>
+          وأغلى حاجة ممكن حد يلاقيها.<br><br>
+          ده أول عيد بينا مع بعض،<br>
+          وربنا يكتبلنا مع بعض كل عيد جاي.<br><br>
+          بحبك بشكل مش هعرف أوصفه،<br>
+          بس قلبي بيحس بيه كل يوم.<br><br>
+          ومش هتلاقي فيه يوم ينسى إنك موجودة.<br><br>
+          كل سنة وانتِ حبيبتي. 🤍
+        </p>
+      </div>
+      <div class="after-foot" style="margin-bottom:1.5rem;">✦ &nbsp; من قلب بيحبك &nbsp; ✦</div>
+      <button class="eid-btn eid-btn-gold" id="eid-money-btn" onclick="handleEidMoney()">
+        💰 العيدية 💰
+      </button>
+    </div>
+
+    <!-- المرحلة التالتة: بعد العيدية -->
+    <div id="after-step-3" style="display:none;">
+      <div class="after-sparkle">🎊</div>
+      <h2 class="after-title">يالا بقى 😄</h2>
+      <div class="after-msg">
+        <p>طلبتِ العيدية،<br>الراجل اتبلّغ...<br><br>حياكِ 💛</p>
+      </div>
+      <div class="after-foot">✦ &nbsp; كل سنة وانتِ طيبة &nbsp; ✦</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- أغنية الصفحة الأولى -->
+<audio id="bg-audio" loop preload="auto">
+  <source src="https://raw.githubusercontent.com/MohamedJoba/sendrila/main/song.mpeg" type="audio/mpeg">
+</audio>
+
+<!-- أغنية الصفحة التانية — ✏️ غيّر الـ src لو عايز أغنية تانية -->
+<audio id="after-audio" loop preload="auto">
+  <source src="https://raw.githubusercontent.com/MohamedJoba/sendrila/main/song.mpeg" type="audio/mpeg">
+</audio>
+
+<!-- SETUP MODAL -->
+<div id="setup-modal">
+  <div class="setup-box">
+    <h3 class="setup-h">⚙️ إعداد الصور</h3>
+    <p class="setup-note">
+      ارفع الصور ← اضغط "تنزيل الصفحة النهائية"<br>
+      ارفع الملف الجديد على الاستضافة وخلاص ✨
+    </p>
+    <div class="setup-grid" id="setup-grid"></div>
+    <button class="btn-export" onclick="exportPage()">📥 تنزيل الصفحة النهائية</button>
+    <button class="btn-cancel" onclick="closeSetup()">إغلاق</button>
+  </div>
+</div>
+<input type="file" class="fi" id="fi-0" accept="image/*">
+<input type="file" class="fi" id="fi-1" accept="image/*">
+<input type="file" class="fi" id="fi-2" accept="image/*">
+<input type="file" class="fi" id="fi-3" accept="image/*">
+<input type="file" class="fi" id="fi-4" accept="image/*">
+<input type="file" class="fi" id="fi-5" accept="image/*">
+<input type="file" class="fi" id="fi-6" accept="image/*">
+
+<!-- MAIN PAGE -->
+<div id="main-page">
+  <div class="pg-header">
+    <div class="orn-row"><div class="orn-line r"></div><div class="orn-dia"></div><div class="orn-line"></div></div>
+    <p class="pg-eyebrow">A LITTLE SURPRISE FOR YOU</p>
+    <h1 class="pg-main-title">لكِ أنتِ</h1>
+    <div class="orn-row" style="margin-top:.9rem;"><div class="orn-line r"></div><div class="orn-dia"></div><div class="orn-line"></div></div>
+  </div>
+
+  <div class="msg-wrap">
+    <div class="msg-card">
+      <div class="msg-body">
+        <p class="msg-line">مش بتهوني عليا فعلاً،</p>
+        <p class="msg-line ind">ولا هيجي يوم وتهوني فيه.</p>
+        <p class="msg-line">حتى لو زعليتك في يوم،</p>
+        <p class="msg-line ind">مش هيعدي من غير ما أصالحك فيه.</p>
+        <p class="msg-line">أنتِ فعلاً مختلفة عن أي حاجة وأي حد شوفته،</p>
+        <p class="msg-line ind">مميزة في كل تفاصيلك،</p>
+        <p class="msg-line ind">مميزة في زمن كثر فيه التشابه.</p>
+        <p class="msg-line">بين كل الناس باينة وبتلمعي.</p>
+        <p class="msg-line">دايماً روحك حلوة ومبهجة عطول ماشاء الله.</p>
+        <p class="msg-line">أنتِ خير في حياة أي حد تدخليها.</p>
+        <p class="msg-line hi">ربنا يحفظك بحفظه من كل سوء أو شر يارب. 🤍</p>
+        <p class="msg-sig">— بكل قلبي</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="photos-sec">
+    <div class="photo-wrap visible" id="pw-0"><div class="photo-card" id="pf-0"></div></div>
+
+    <div class="cd-wrap clickable" id="cd-1">
+      <div class="cd-vline"></div>
+      <div class="cd-figure" id="cdf-1">
+        <div class="sp" style="width:9px;height:9px;top:26px;left:18px;animation-delay:.2s;"></div>
+        <div class="sp" style="width:6px;height:6px;top:52px;right:14px;animation-delay:.7s;"></div>
+        <div class="sp" style="width:7px;height:7px;bottom:44px;left:8px;animation-delay:1.1s;"></div>
+      </div>
+      <p class="cd-magic">✦ بسحرها ✦</p>
+      <p class="cd-hint">اضغطي ✨</p>
+      <div class="cd-vline bot"></div>
+    </div>
+    <div class="photo-wrap" id="pw-1"><div class="photo-card" id="pf-1"></div></div>
+
+    <div class="cd-wrap clickable" id="cd-2" style="display:none;">
+      <div class="cd-vline"></div>
+      <div class="cd-figure" id="cdf-2">
+        <div class="sp" style="width:8px;height:8px;top:30px;right:20px;animation-delay:.3s;"></div>
+        <div class="sp" style="width:6px;height:6px;top:58px;left:12px;animation-delay:.9s;"></div>
+        <div class="sp" style="width:7px;height:7px;bottom:38px;right:10px;animation-delay:1.3s;"></div>
+      </div>
+      <p class="cd-magic">✦ بسحرها ✦</p>
+      <p class="cd-hint">اضغطي ✨</p>
+      <div class="cd-vline bot"></div>
+    </div>
+    <div class="photo-wrap" id="pw-2"><div class="photo-card" id="pf-2"></div></div>
+
+    <div class="cd-wrap clickable" id="cd-3" style="display:none;">
+      <div class="cd-vline"></div>
+      <div class="cd-figure" id="cdf-3">
+        <div class="sp" style="width:8px;height:8px;top:25px;left:22px;animation-delay:.4s;"></div>
+        <div class="sp" style="width:5px;height:5px;top:60px;right:16px;animation-delay:.8s;"></div>
+        <div class="sp" style="width:7px;height:7px;bottom:50px;left:14px;animation-delay:1.2s;"></div>
+      </div>
+      <p class="cd-magic">✦ بسحرها ✦</p>
+      <p class="cd-hint">اضغطي ✨</p>
+      <div class="cd-vline bot"></div>
+    </div>
+    <div class="photo-wrap" id="pw-3"><div class="photo-card" id="pf-3"></div></div>
+
+    <div class="cd-wrap clickable" id="cd-4" style="display:none;">
+      <div class="cd-vline"></div>
+      <div class="cd-figure" id="cdf-4">
+        <div class="sp" style="width:9px;height:9px;top:22px;right:18px;animation-delay:.5s;"></div>
+        <div class="sp" style="width:6px;height:6px;top:55px;left:10px;animation-delay:1s;"></div>
+        <div class="sp" style="width:7px;height:7px;bottom:42px;right:8px;animation-delay:1.4s;"></div>
+      </div>
+      <p class="cd-magic">✦ بسحرها ✦</p>
+      <p class="cd-hint">اضغطي ✨</p>
+      <div class="cd-vline bot"></div>
+    </div>
+    <div class="photo-wrap" id="pw-4"><div class="photo-card" id="pf-4"></div></div>
+
+    <div class="cd-wrap clickable" id="cd-5" style="display:none;">
+      <div class="cd-vline"></div>
+      <div class="cd-figure" id="cdf-5">
+        <div class="sp" style="width:8px;height:8px;top:28px;left:20px;animation-delay:.6s;"></div>
+        <div class="sp" style="width:5px;height:5px;top:56px;right:12px;animation-delay:1.1s;"></div>
+        <div class="sp" style="width:7px;height:7px;bottom:36px;left:16px;animation-delay:1.7s;"></div>
+      </div>
+      <p class="cd-magic">✦ بسحرها ✦</p>
+      <p class="cd-hint">اضغطي ✨</p>
+      <div class="cd-vline bot"></div>
+    </div>
+    <div class="photo-wrap" id="pw-5"><div class="photo-card" id="pf-5"></div></div>
+
+    <div class="cd-wrap clickable" id="cd-6" style="display:none;">
+      <div class="cd-vline"></div>
+      <div class="cd-figure" id="cdf-6">
+        <div class="sp" style="width:9px;height:9px;top:30px;right:14px;animation-delay:.2s;"></div>
+        <div class="sp" style="width:6px;height:6px;top:50px;left:22px;animation-delay:.8s;"></div>
+        <div class="sp" style="width:7px;height:7px;bottom:48px;right:18px;animation-delay:1.5s;"></div>
+      </div>
+      <p class="cd-magic">✦ بسحرها ✦</p>
+      <p class="cd-hint">اضغطي ✨</p>
+      <div class="cd-vline bot"></div>
+    </div>
+    <div class="photo-wrap" id="pw-6"><div class="photo-card" id="pf-6"></div></div>
+  </div>
+
+  <div class="special-sec">
+    <div class="orn-row" style="margin-bottom:2rem;"><div class="orn-line r"></div><div class="orn-dia"></div><div class="orn-line"></div></div>
+    <button class="special-btn" id="special-btn" onclick="openSpl()"><span>💌</span> رسالة خاصة</button>
+  </div>
+  <div class="pg-footer">✦ &nbsp; ✦ &nbsp; ✦</div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+//  CONFIG — ✏️ عدّل هنا لو محتاج
+// ══════════════════════════════════════
+const PWD_MAIN    = 'شهد';
+const PWD_SPECIAL = '31/3/2026';
+const TOTAL_PHOTOS = 7;
+const ARABIC_NUMS  = ['٠١','٠٢','٠٣','٠٤','٠٥','٠٦','٠٧'];
+const GH  = 'https://raw.githubusercontent.com/MohamedJoba/sendrila/main/';
+const imgs = ['01','02','03','04','05','06','07'].map(n => GH + n + '.jpeg');
+const BURN_KEY = 'msg_burned_forever';
+const WEBHOOK  = 'https://discord.com/api/webhooks/1496637134629507093/9PZ7PYIso95mbbTLt3RLsx3N8BxBKtgtZSqLvTXNLvQ_HT73Tf_djvXRXyxbP3cVFukI';
+
+// ══════════════════════════════════════
+//  🔥 PERMANENT BURN CHECK — أول ما الصفحة تفتح
+// ══════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem(BURN_KEY) === '1') {
+    document.getElementById('pwd-screen').style.display = 'none';
+    const after = document.getElementById('after-overlay');
+    after.classList.add('open');
+    after.classList.add('visible');
+    lockScreenshot();
+    const audio = document.getElementById('after-audio');
+    if (audio) audio.play().catch(() =>
+      document.addEventListener('click', () => audio.play(), {once:true})
+    );
+  }
+});
+
+// ══════════════════════════════════════
+//  📵 SCREENSHOT PREVENTION
+// ══════════════════════════════════════
+function lockScreenshot() {
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    const blocked = e.key==='PrintScreen' || e.key==='F12' ||
+      (e.ctrlKey && ['s','p','u'].includes(e.key.toLowerCase())) ||
+      (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase()));
+    if (blocked) {
+      e.preventDefault();
+      const f = document.createElement('div');
+      f.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9999;pointer-events:none;';
+      document.body.appendChild(f);
+      setTimeout(() => f.remove(), 150);
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    const c = document.getElementById('after-content');
+    if (!c) return;
+    if (document.hidden) { c.style.filter='blur(25px)'; c.style.transition='filter 0.1s'; }
+    else { setTimeout(() => c.style.filter='', 400); }
+  });
+}
+
+// ══════════════════════════════════════
+//  CINDERELLA SVG
+// ══════════════════════════════════════
+const CINDER_SVG = `<svg viewBox="0 0 240 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+  <path d="M120 110 C83 128 50 165 46 208 Q82 228 120 228 Q158 228 194 208 C190 165 157 128 120 110Z" fill="#C5D9F0"/>
+  <path d="M120 110 C102 130 90 164 88 208 Q101 224 120 228 Q139 224 152 208 C150 164 138 130 120 110Z" fill="#B0CAE8"/>
+  <ellipse cx="100" cy="222" rx="14" ry="6" fill="#D4EAF7" opacity=".8"/>
+  <ellipse cx="140" cy="222" rx="14" ry="6" fill="#D4EAF7" opacity=".8"/>
+  <path d="M96 76 L144 76 L150 114 Q120 126 90 114Z" fill="#5B8FBF"/>
+  <path d="M96 76 Q120 68 144 76 Q140 87 120 90 Q100 87 96 76Z" fill="#E8F4FB"/>
+  <path d="M91 103 Q120 114 149 103 L149 112 Q120 122 91 112Z" fill="#4A7A9B"/>
+  <path d="M95 86 Q74 104 68 122" stroke="#F5C5A3" stroke-width="13" stroke-linecap="round" fill="none"/>
+  <circle cx="66" cy="127" r="11" fill="#E8F0F8"/>
+  <path d="M145 86 Q164 98 170 112" stroke="#F5C5A3" stroke-width="13" stroke-linecap="round" fill="none"/>
+  <circle cx="172" cy="117" r="11" fill="#E8F0F8"/>
+  <circle cx="120" cy="52" r="28" fill="#F5C5A3"/>
+  <ellipse cx="120" cy="33" rx="25" ry="21" fill="#E8B830"/>
+  <circle cx="120" cy="23" r="15" fill="#F0C840"/>
+  <ellipse cx="93" cy="47" rx="10" ry="17" fill="#E8B830"/>
+  <ellipse cx="147" cy="47" rx="10" ry="17" fill="#E8B830"/>
+  <path d="M105 28 L109 18 L114 25 L120 13 L126 25 L131 18 L135 28" stroke="#C9A844" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+  <circle cx="120" cy="14" r="5" fill="#F5D76E"/>
+  <circle cx="109" cy="19" r="3.5" fill="#F5D76E"/>
+  <circle cx="131" cy="19" r="3.5" fill="#F5D76E"/>
+  <ellipse cx="107" cy="55" rx="5" ry="5.5" fill="#3D2510"/>
+  <ellipse cx="133" cy="55" rx="5" ry="5.5" fill="#3D2510"/>
+  <circle cx="108.5" cy="53" r="2.2" fill="white"/>
+  <circle cx="134.5" cy="53" r="2.2" fill="white"/>
+  <ellipse cx="96" cy="61" rx="8" ry="5" fill="#F4A6A6" opacity=".4"/>
+  <ellipse cx="144" cy="61" rx="8" ry="5" fill="#F4A6A6" opacity=".4"/>
+  <path d="M117 64 Q120 68 123 64" stroke="#D4956A" stroke-width="1.5" fill="none"/>
+  <path d="M109 70 Q120 79 131 70" stroke="#C4606A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M112 71 Q120 77 128 71 Q120 75 112 71Z" fill="#E88080" opacity=".6"/>
+  <g class="wand-g">
+    <line x1="66" y1="122" x2="44" y2="148" stroke="#C9A844" stroke-width="3" stroke-linecap="round"/>
+    <path d="M44 140 L45.5 146 L51 146 L46.5 150 L48 156 L44 153 L40 156 L41.5 150 L37 146 L42.5 146Z" fill="#F5D76E" stroke="#C9A844" stroke-width=".8"/>
+    <circle cx="34" cy="133" r="3.5" fill="#F5D76E" opacity=".7"/>
+    <circle cx="57" cy="157" r="2.5" fill="#F5D76E" opacity=".55"/>
+    <circle cx="28" cy="150" r="2" fill="#F5D76E" opacity=".65"/>
+  </g>
+</svg>`;
+
+// ══════════════════════════════════════
+//  RENDER & INJECT
+// ══════════════════════════════════════
+function renderAll() { for(let i=0;i<TOTAL_PHOTOS;i++) renderPhoto(i); }
+function renderPhoto(i) {
+  const f = document.getElementById('pf-'+i);
+  if (!f) return;
+  f.innerHTML = `<img src="${imgs[i]}" alt="صورة ${i+1}" loading="lazy"><span class="photo-num">${ARABIC_NUMS[i]}</span>`;
+}
+function injectCinders() {
+  [1,2,3,4,5,6].forEach(n => {
+    const fig = document.getElementById('cdf-'+n);
+    if (!fig) return;
+    const sp = fig.innerHTML;
+    fig.innerHTML = CINDER_SVG + `<div style="position:absolute;inset:0;pointer-events:none;">${sp}</div>`;
+  });
+}
+
+// ══════════════════════════════════════
+//  AUDIO
+// ══════════════════════════════════════
+function playAudio() {
+  const a = document.getElementById('bg-audio');
+  if (!a) return;
+  a.volume = 0.75;
+  const p = a.play();
+  if (p) p.catch(() => {
+    document.addEventListener('click',()=>a.play(),{once:true});
+    document.addEventListener('touchstart',()=>a.play(),{once:true});
+  });
+}
+
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+function initObserver() {
+  document.getElementById('pw-0').classList.add('visible');
+  for (let n=1; n<=6; n++) {
+    const cd = document.getElementById('cd-'+n);
+    if (cd) cd.addEventListener('click', () => handleCinderClick(n, cd));
+  }
+}
+
+// ══════════════════════════════════════
+//  CINDERELLA CLICK
+// ══════════════════════════════════════
+function handleCinderClick(n, cdWrap) {
+  if (cdWrap.dataset.used) return;
+  cdWrap.dataset.used = '1';
+  cdWrap.classList.remove('clickable');
+  cdWrap.classList.add('cd-used');
+  const hint = cdWrap.querySelector('.cd-hint');
+  if (hint) hint.style.display = 'none';
+  const wg = cdWrap.querySelector('.wand-g');
+  if (wg) { wg.style.animation='none'; void wg.offsetWidth; wg.style.animation='wand-wave 1.6s ease forwards'; }
+  const fig = cdWrap.querySelector('.cd-figure');
+  if (fig) burstSparkles(fig);
+  setTimeout(() => {
+    const pw = document.getElementById('pw-'+n);
+    if (pw) { pw.classList.add('magic-reveal'); setTimeout(()=>pw.scrollIntoView({behavior:'smooth',block:'center'}),120); }
+    setTimeout(() => {
+      if (n < 6) {
+        const nextCd = document.getElementById('cd-'+(n+1));
+        if (nextCd) { nextCd.style.display='flex'; void nextCd.offsetWidth; nextCd.classList.add('cd-appear'); setTimeout(()=>nextCd.scrollIntoView({behavior:'smooth',block:'center'}),400); }
+      } else {
+        const btn = document.getElementById('special-btn');
+        if (btn) { btn.classList.add('visible'); setTimeout(()=>btn.scrollIntoView({behavior:'smooth',block:'center'}),400); }
+      }
+    }, 900);
+  }, 650);
+}
+
+function burstSparkles(el) {
+  const rect=el.getBoundingClientRect(), cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+  const colors=['#F5D76E','#C9A844','#fff','#E8B830','#F5C5A3','#ffe0f0'];
+  for(let i=0;i<32;i++){
+    const dot=document.createElement('div'); dot.className='spark-dot';
+    const size=4+Math.random()*9, angle=Math.random()*Math.PI*2, dist=55+Math.random()*130;
+    const dur=.5+Math.random()*.75;
+    dot.style.cssText=`left:${cx-size/2}px;top:${cy-size/2}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;--d:${dur}s;`;
+    document.body.appendChild(dot);
+    setTimeout(()=>dot.remove(), dur*1000+100);
+  }
+}
+
+// ══════════════════════════════════════
+//  PASSWORD CHECK
+// ══════════════════════════════════════
+function checkPwd() {
+  const val = document.getElementById('pwd-input').value.trim();
+  if (val === PWD_MAIN) {
+    const ps = document.getElementById('pwd-screen');
+    ps.classList.add('fade-out');
+    setTimeout(() => {
+      ps.style.display='none';
+      document.getElementById('main-page').style.display='block';
+      document.getElementById('top-stripe').style.display='block';
+      renderAll(); injectCinders(); initObserver(); playAudio();
+    }, 820);
+  } else {
+    const e=document.getElementById('pwd-err');
+    e.style.display='block';
+    document.getElementById('pwd-input').value='';
+    setTimeout(()=>e.style.display='none',2800);
+  }
+}
+document.getElementById('pwd-input').addEventListener('keydown',ev=>{if(ev.key==='Enter')checkPwd();});
+
+// ══════════════════════════════════════
+//  SPECIAL MESSAGE MODAL
+// ══════════════════════════════════════
+function openSpl() {
+  document.getElementById('spl-pwd-step').style.display='block';
+  document.getElementById('spl-msg-step').style.display='none';
+  document.getElementById('spl-pwd-input').value='';
+  document.getElementById('spl-pwd-err').style.display='none';
+  document.getElementById('spl-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('spl-pwd-input').focus(),300);
+}
+function closeSpl() {
+  if(thanosTimer){clearInterval(thanosTimer);thanosTimer=null;}
+  document.getElementById('spl-overlay').classList.remove('open');
+}
+function checkSplPwd() {
+  const val = document.getElementById('spl-pwd-input').value.trim();
+  if (val === PWD_SPECIAL) {
+    document.getElementById('spl-pwd-step').style.display='none';
+    document.getElementById('spl-msg-step').style.display='block';
+    startThanosCountdown();
+  } else {
+    // إرسال صامت للـ Discord
+    if (val) {
+      const t = new Date().toLocaleString('ar-EG',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:`🔐 **محاولة دخول على الرسالة الخاصة**\n📝 **الباسورد:** \`${val}\`\n🕐 **الوقت:** ${t}`})}).catch(()=>{});
+    }
+    const e=document.getElementById('spl-pwd-err');
+    e.style.display='block';
+    document.getElementById('spl-pwd-input').value='';
+    setTimeout(()=>e.style.display='none',2500);
+  }
+}
+document.getElementById('spl-pwd-input').addEventListener('keydown',ev=>{if(ev.key==='Enter')checkSplPwd();});
+document.getElementById('spl-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('spl-overlay'))closeSpl();});
+
+// ══════════════════════════════════════
+//  ⏱️ COUNTDOWN
+// ══════════════════════════════════════
+let thanosTimer=null, thanosSeconds=60;
+function startThanosCountdown() {
+  thanosSeconds=60;
+  const numEl=document.getElementById('countdown-num');
+  const barEl=document.getElementById('countdown-bar');
+  const cntWrap=document.getElementById('thanos-countdown');
+  cntWrap.classList.add('visible');
+  numEl.textContent=thanosSeconds;
+  barEl.style.width='100%';
+  if(thanosTimer) clearInterval(thanosTimer);
+  thanosTimer=setInterval(()=>{
+    thanosSeconds--;
+    numEl.textContent=thanosSeconds;
+    barEl.style.width=(thanosSeconds/60*100)+'%';
+    if(thanosSeconds<=10){numEl.classList.add('urgent');barEl.classList.add('urgent');}
+    if(thanosSeconds<=0){clearInterval(thanosTimer);triggerThanos();}
+  },1000);
+}
+
+// ══════════════════════════════════════
+//  💨 THANOS DISINTEGRATION
+// ══════════════════════════════════════
+function triggerThanos() {
+  const modal=document.querySelector('.modal-box');
+  const canvas=document.getElementById('thanos-canvas');
+  const ctx=canvas.getContext('2d');
+  const rect=modal.getBoundingClientRect();
+  canvas.style.display='block';
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+
+  const W=rect.width, H=rect.height;
+  const off=document.createElement('canvas'); off.width=W; off.height=H;
+  const oc=off.getContext('2d');
+  oc.fillStyle='#FBF8F2'; oc.roundRect(0,0,W,H,26); oc.fill();
+  oc.fillStyle='#6B1A2B'; oc.font='italic bold 22px Playfair Display,serif'; oc.textAlign='center';
+  oc.fillText('رسالة خاصة',W/2,80);
+  oc.fillStyle='#2D1A10'; oc.font='14px Cairo,sans-serif';
+  oc.fillText('أنتِ أجمل مفاجأة ما توقعتهاش',W/2,140);
+  oc.fillText('وكل يوم بيعدي معاكِ بيثبتلي',W/2,170);
+  oc.fillText('إن في حاجات في الدنيا',W/2,200);
+  oc.fillText('تستاهل أكتر من أي كلام',W/2,230);
+
+  const PS=3, id=oc.getImageData(0,0,W,H), parts=[];
+  for(let y=0;y<H;y+=PS) for(let x=0;x<W;x+=PS){
+    const i=(y*W+x)*4;
+    if(id.data[i+3]<20) continue;
+    parts.push({
+      x:rect.left+x, y:rect.top+y,
+      vx:(Math.random()-.3)*6, vy:(Math.random()-.7)*8-2,
+      gravity:.12+Math.random()*.1,
+      size:PS+Math.random(),
+      color:`rgba(${id.data[i]},${id.data[i+1]},${id.data[i+2]},1)`,
+      alpha:1, delay:Math.random()*2200, started:false, done:false
+    });
+  }
+
+  modal.style.transition='opacity 0.5s ease'; modal.style.opacity='0';
+  const t0=performance.now(), DUR=3200;
+
+  function animFrame(now) {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let allDone=true;
+    for(const p of parts){
+      if(p.done) continue;
+      const elapsed=now-t0;
+      if(elapsed<p.delay){allDone=false;continue;}
+      p.started=true;
+      const t=(elapsed-p.delay)/DUR;
+      if(t>=1){p.done=true;continue;}
+      allDone=false;
+      p.vy+=p.gravity; p.x+=p.vx; p.y+=p.vy;
+      p.alpha=Math.max(0,1-t*1.3);
+      ctx.globalAlpha=p.alpha; ctx.fillStyle=p.color;
+      ctx.fillRect(p.x,p.y,p.size,p.size);
+    }
+    ctx.globalAlpha=1;
+    if(!allDone) requestAnimationFrame(animFrame);
+    else { canvas.style.display='none'; showAfterPage(); }
+  }
+  requestAnimationFrame(animFrame);
+}
+
+// ══════════════════════════════════════
+//  ✨ SHOW AFTER PAGE + 🔥 BURN FOREVER
+// ══════════════════════════════════════
+function showAfterPage() {
+  // حرق دائم — مش هترجع تاني أبداً حتى لو عمل ريفريش
+  localStorage.setItem(BURN_KEY,'1');
+
+  const overlay=document.getElementById('spl-overlay');
+  if(overlay) overlay.style.display='none';
+
+  const after=document.getElementById('after-overlay');
+  after.classList.add('open');
+  setTimeout(()=>after.classList.add('visible'),80);
+
+  // وقّف الأغنية الأولى
+  const bg=document.getElementById('bg-audio');
+  if(bg){bg.pause();bg.currentTime=0;}
+
+  // شغّل الأغنية التانية
+  const audio=document.getElementById('after-audio');
+  if(audio){
+    audio.volume=0.8;
+    audio.play().catch(()=>document.addEventListener('click',()=>audio.play(),{once:true}));
+  }
+
+  // منع السكرين شوت
+  lockScreenshot();
+}
+
+// ══════════════════════════════════════
+//  🌙 EID BUTTONS
+// ══════════════════════════════════════
+function handleEidGreet() {
+  const t=new Date().toLocaleString('ar-EG',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:`🌙 **ضغطت على "كل سنة وانتِ طيبة"!**\n🕐 الوقت: ${t}\n💛 فتحت رسالة العيد الخاصة!`})}).catch(()=>{});
+  const s1=document.getElementById('after-step-1');
+  s1.style.transition='opacity .5s ease'; s1.style.opacity='0';
+  setTimeout(()=>{ s1.style.display='none'; document.getElementById('after-step-2').style.display='block'; },500);
+}
+
+function handleEidMoney() {
+  const t=new Date().toLocaleString('ar-EG',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:`💰 **طلبت العيدية!! 😂**\n🕐 الوقت: ${t}\n👆 يلا ابعت العيدية يا معلم! 💛`})}).catch(()=>{});
+  const s2=document.getElementById('after-step-2');
+  s2.style.transition='opacity .5s ease'; s2.style.opacity='0';
+  setTimeout(()=>{ s2.style.display='none'; document.getElementById('after-step-3').style.display='block'; },500);
+}
+
+// ══════════════════════════════════════
+//  WAND AUTO-WAVE
+// ══════════════════════════════════════
+(function(){
+  const wg=document.getElementById('main-wand');
+  if(!wg) return;
+  function wave(){wg.style.animation='none';void wg.offsetWidth;wg.style.animation='wand-wave 1.6s ease forwards';setTimeout(wave,4000);}
+  setTimeout(wave,1500);
+})();
+
+// ══════════════════════════════════════
+//  ADMIN ACCESS
+// ══════════════════════════════════════
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key.toUpperCase()==='S'){e.preventDefault();openSetup();}});
+if(location.search.includes('admin')) openSetup();
+let cinderTaps=0,cinderTimer;
+document.getElementById('pwd-cinder').addEventListener('click',()=>{
+  cinderTaps++;clearTimeout(cinderTimer);
+  cinderTimer=setTimeout(()=>cinderTaps=0,2500);
+  if(cinderTaps>=5){cinderTaps=0;openSetup();}
+});
+function openSetup(){document.getElementById('setup-modal').classList.add('open');renderSetupGrid();}
+function closeSetup(){document.getElementById('setup-modal').classList.remove('open');}
+document.getElementById('setup-modal').addEventListener('click',e=>{if(e.target===document.getElementById('setup-modal'))closeSetup();});
+
+function renderSetupGrid(){
+  const g=document.getElementById('setup-grid');
+  const labels=['صورة ١','صورة ٢','صورة ٣','صورة ٤','صورة ٥','صورة ٦','صورة ٧'];
+  g.innerHTML='';
+  for(let i=0;i<TOTAL_PHOTOS;i++){
+    const slot=document.createElement('div'); slot.className='setup-slot';
+    slot.onclick=()=>document.getElementById('fi-'+i).click();
+    slot.innerHTML=imgs[i]?`<img src="${imgs[i]}" alt="">`:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect x="3" y="7" width="28" height="20" rx="3" stroke="#C9A844" stroke-width="1.5"/><circle cx="12" cy="14" r="3.5" stroke="#C9A844" stroke-width="1.5"/><path d="M3 24l8-6 5.5 4.5 6-6 8.5 7.5" stroke="#C9A844" stroke-width="1.5" stroke-linejoin="round"/></svg><span>${labels[i]}</span>`;
+    g.appendChild(slot);
+  }
+}
+for(let i=0;i<TOTAL_PHOTOS;i++){
+  document.getElementById('fi-'+i).addEventListener('change',function(e){
+    const file=e.target.files[0]; if(!file) return;
+    const idx=+this.id.split('-')[1];
+    const reader=new FileReader();
+    reader.onload=ev=>{imgs[idx]=ev.target.result;renderSetupGrid();};
+    reader.readAsDataURL(file); this.value='';
+  });
+}
+function exportPage(){
+  if(imgs.every(x=>!x)){alert('ارفع صورة واحدة على الأقل!');return;}
+  const blob=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='surprise-final.html'; a.click();
+  URL.revokeObjectURL(url);
+  setTimeout(()=>alert('✅ تم التنزيل!\nارفع الملف الجديد على الاستضافة 🎉'),400);
+}
+</script>
+</body>
+</html>
